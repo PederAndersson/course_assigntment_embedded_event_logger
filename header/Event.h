@@ -1,0 +1,8 @@
+//
+// Created by peder on 2026-01-12.
+//
+
+#ifndef COURSE_ASSIGNTMENT_EVENT_H
+#define COURSE_ASSIGNTMENT_EVENT_H
+
+#endif //COURSE_ASSIGNTMENT_EVENT_H
