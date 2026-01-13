@@ -20,43 +20,34 @@ void initRand() {
 }
 
 
-static struct Node* createNode(sensorType s) {
-    struct Node* node = malloc(sizeof(struct Node));
-    if (!node) return 0;
-    node->_timestamp = currentTime();
+static Event* createEvent(sensorType s) {
+    Event* event = malloc(sizeof(Event));
+    if (!event) return 0;
+    event->_timestamp = currentTime();
 
     switch (s) {
         case Temperature : {
-            strncpy(node->_sensor,"Temperature Sensor",SENSOR_NAME_SIZE);
-            strncpy(node->_data._unit, "C", UNIT_SIZE);
-            int sensorId = 1;
-            node->_data._value = rand() % 35 + 18;
-            node->_Id = sensorId;
-            node->_next = NULL;
-            //node->_previous = NULL;
-            return node;
+            strncpy(event->_sensor,"Temperature Sensor",SENSOR_NAME_SIZE);
+            strncpy(event->_unit, "C", UNIT_SIZE);
+            event->_value = rand() % 35 + 18;
+            event->_Id = TEMP_ID;
+            return event;
 
         }
         case Humidity : {
-            strncpy(node->_sensor, "Humidity Sensor", SENSOR_NAME_SIZE);
-            strncpy(node->_data._unit, "%", UNIT_SIZE);
-            int sensorId = 2;
-            node->_data._value = rand() % 85 + 40;
-            node->_Id = sensorId;
-            node->_next = NULL;
-            //node->_previous = NULL;
-            return node;
+            strncpy(event->_sensor, "Humidity Sensor", SENSOR_NAME_SIZE);
+            strncpy(event->_unit, "%", UNIT_SIZE);
+            event->_value = rand() % 85 + 40;
+            event->_Id = HUM_ID;
+            return event;
 
         }
         case Light : {
-            strncpy(node->_sensor, "Light Sensor",SENSOR_NAME_SIZE);
-            strncpy(node->_data._unit, "lx", UNIT_SIZE);
-            int sensorId = 3;
-            node->_data._value = rand() % 450 + 250 ;
-            node->_Id = sensorId;
-            node->_next = NULL;
-            //node->_previous = NULL;
-            return node;
+            strncpy(event->_sensor, "Light Sensor",SENSOR_NAME_SIZE);
+            strncpy(event->_unit, "lx", UNIT_SIZE);
+            event->_value = rand() % 450 + 250 ;
+            event->_Id = LIGHT_ID;
+            return event;
         }
             default: {return NULL;}
     }

@@ -5,6 +5,11 @@
 #ifndef COURSE_ASSIGNTMENT_EVENT_H
 #define COURSE_ASSIGNTMENT_EVENT_H
 
+#define SENSOR_NAME_SIZE 20
+#define UNIT_SIZE 5
+#define TEMP_ID 1
+#define HUM_ID 2
+#define LIGHT_ID 3
 
 typedef enum Sensor{
     Temperature,
@@ -13,22 +18,16 @@ typedef enum Sensor{
     TYPE_COUNT
 } sensorType;
 
-#define SENSOR_NAME_SIZE 20
-#define UNIT_SIZE 5
+typedef int Data;
+typedef struct Event Event;
 
-struct Data {
-    int _value;
-    char _unit[UNIT_SIZE];
-};
-
-struct Node {
+typedef struct Event {
     char _sensor[SENSOR_NAME_SIZE];
     int _Id;
-    struct Data _data;
+    Data _value;
+    char _unit[UNIT_SIZE];
     struct tm *_timestamp;
-    struct Node* _next;
-    //struct Node* _previous;
-};
+}event;
 
 struct tm* currentTime();
 
