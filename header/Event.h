@@ -5,6 +5,8 @@
 #ifndef COURSE_ASSIGNTMENT_EVENT_H
 #define COURSE_ASSIGNTMENT_EVENT_H
 
+#include <time.h>
+
 #define SENSOR_NAME_SIZE 20
 #define UNIT_SIZE 5
 #define TEMP_ID 1
@@ -22,18 +24,18 @@ typedef int Data;
 typedef struct Event Event;
 
 typedef struct Event {
-    char _sensor[SENSOR_NAME_SIZE];
+    sensorType _sensor;
     int _Id;
     Data _value;
     char _unit[UNIT_SIZE];
-    struct tm *_timestamp;
+    struct tm _timestamp;
 }event;
-
-struct tm* currentTime();
 
 sensorType randomSensor();
 
 void initRand();
+
+Event* newEvent(sensorType s);
 
 
 

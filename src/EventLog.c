@@ -6,6 +6,8 @@
 
 #include "../header/EventLog.h"
 
+#include <stdio.h>
+
 
 static List* createLog(Event e) {
     List* event_log = malloc(sizeof(List));
@@ -16,44 +18,83 @@ static List* createLog(Event e) {
     return event_log;
 }
 
-List* createEmptylist(void) {
+List* createEmptyList(void) {
     return NULL;
 }
 
-bool isEmpty(List *l) {
+bool isEmpty(ListPtr l) {
     if (l == NULL) return true;
     return false;
 }
 
-void logDestroyList(List *l) {
-    if (isEmpty(l)) return;
 
-    while (l != NULL) {
-        Event* nodeToRemove = &l->_node;
-        List* listToRemove = l;
-        l = l->_next;
-        free(nodeToRemove);
+void logDestroyList(ListPtr *l) {
+    if (isEmpty(*l)) return;
+
+    while (*l != NULL) {
+        List* listToRemove = *l;
+        (*l) = (*l)->_next;
         free(listToRemove);
     }
 }
 
-void logDestroyElement(List* l, const Data d ) {
-    if (isEmpty(l)) return;
-    while (l->_node._value != d && l->_next != NULL) {
-        l = l->_next;
-    }
-    if (l->_node._value == d) {
-        List* logToRemove = l;
-        l->_next = logToRemove->_next;
+void logDestroyElement(ListPtr* l, const Data d ) {
+    if (isEmpty(*l)) return;
+    while (*l != NULL && (*l)->_node._value == d) {
+        List* logToRemove = *l;
+        (*l) = (*l)->_next;
         free(logToRemove);
     }
+    ListPtr CurrentNode = *l;
+    if (isEmpty(CurrentNode)) return;
+    while (CurrentNode->_next != NULL) {
+        if (CurrentNode->_next->_node._value == d) {
+            List* logToRemove = CurrentNode->_next;
+            CurrentNode->_next = logToRemove->_next;
+            free(logToRemove);
+        }else {
+            CurrentNode = CurrentNode->_next;
+        }
+    }
 }
 
-void logDestroySensor(List*l, sensorType s) {
-    if (isEmpty(l)) return;
+void logDestroySensor(ListPtr*l, sensorType s) {
+    if (isEmpty(*l)) return;
+
+    while (*l != NULL && (*l)->_node._sensor == s) {
+        List* logToRemove = *l;
+        (*l) = (*l)->_next;
+        free(logToRemove);
+    }
+
+    List* currentLog = *l;
+    if (isEmpty(currentLog)) return;
+    while (currentLog->_next != NULL) {
+        if (currentLog->_next->_node._sensor == s) {
+            List* logToRemove = currentLog->_next;
+            currentLog->_next = logToRemove->_next;
+            free(logToRemove);
+        }else {
+            currentLog = currentLog->_next;
+        }
+    }
 }
 
-void logAppend(List*l, Event e) {
+void logAppend(ListPtr *l, Event e) {
+    EventLog* newLog = createLog(e);
+    if (!newLog) return;
+    if (*l == NULL) {
+        newLog->_next = *l;
+        (*l) = newLog;
+    }else {
+        EventLog* currentLog = *l;
+        while (currentLog->_next != NULL) {
+            currentLog = currentLog->_next;
+        }
+        if (currentLog->_next == NULL) {
+            currentLog->_next = newLog;
+        }
+    }
 }
 
 
@@ -64,13 +105,6 @@ int logSize(List* l) {
         l = l->_next;
     }
     return size;
-}
-
-Event logGetSensor(const List l, sensorType s) {
-}
-
-Event logGetData(const List l,Data d ) {
-
 }
 
 
