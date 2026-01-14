@@ -1,12 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
+
 
 #include "../header/Event.h"
 #include "../header/EventLog.h"
+#include "../header/EventQueue.h"
+
+const char* enumToString(sensorType s) {
+    switch (s) {
+        case Temperature: { return "Temperature Sensor";}
+        case Humidity: {return "Humidity Sensor";}
+        case Light: {return "Light Sensor";}
+            default: return "Unknown Sensor";
+    }
+}
+
+void printEvent(EventLog* log) {
+    printf("SensorType: %s Id: %d\n", enumToString(log->_node._sensor), log->_node._Id);
+    printf("Value: %d %s\n", log->_node._value, log->_node._unit);
+    printf ("Timestamp: %d:%d:%d", log->_node._timestamp.tm_hour, log->_node._timestamp.tm_min,log->_node._timestamp.tm_sec);
+}
 
 int main(void) {
+    initRand();
+    int arrayCapacity = 100;
+    Event e;
+    Event* event = newEvent(randomSensor());
+    Queue* queue = newQueue(arrayCapacity);
+    EventLog* log = createEmptyList();
+    queueEnqueue(queue,*event);
+    queueDequeue(queue, &e);
+    logAppend(&log, e);
+
+    printEvent(log);
+
+
+
 
     return 0;
 }
