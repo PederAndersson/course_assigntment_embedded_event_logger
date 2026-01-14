@@ -15,7 +15,7 @@ typedef struct {
 } Queue;
 
 
-Queue* newBuffer(int capacity);
+Queue* newQueue(int capacity);
 void queueDestroy(Queue* q);
 void peek(Queue* q);
 bool queueIsEmpty(const Queue* q);
