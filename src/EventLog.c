@@ -6,8 +6,6 @@
 
 #include "../header/EventLog.h"
 
-#include <stdio.h>
-
 
 static List* createLog(Event e) {
     List* event_log = malloc(sizeof(List));
