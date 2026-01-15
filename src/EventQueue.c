@@ -23,7 +23,7 @@ void queueDestroy(Queue* q) {
     free(q);
 }
 
-void peek(Queue* const q) {
+void peek(const Queue* q) {
     bool full = q->_full;
     int spaceLeft = q->_capacity - q->_count;
     Event data = q->_buffer[q->_readIdx];

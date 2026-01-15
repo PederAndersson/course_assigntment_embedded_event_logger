@@ -6,7 +6,7 @@
 #include "Event.h"
 
 typedef struct {
-    Event* _buffer; //pointer to data
+    Event* _buffer; //array
     int _writeIdx; // skrivindex
     int _readIdx; // läsindex
     int _capacity; //antal element
@@ -17,7 +17,7 @@ typedef struct {
 
 Queue* newQueue(int capacity);
 void queueDestroy(Queue* q);
-void peek(Queue* q);
+void peek(const Queue* q);
 bool queueIsEmpty(const Queue* q);
 bool queueIsFull(const Queue* q);
 bool queueEnqueue(Queue* q, Event e);
