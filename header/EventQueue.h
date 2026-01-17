@@ -1,12 +1,12 @@
 
 #ifndef COURSE_ASSIGNTMENT_EVENTQUEUE_H
 #define COURSE_ASSIGNTMENT_EVENTQUEUE_H
-#include <stdbool.h>
 
+#include <stdbool.h>
 #include "Event.h"
 
 typedef struct {
-    Event* _buffer; //pointer to data
+    eventPtr* _buffer; //array
     int _writeIdx; // skrivindex
     int _readIdx; // läsindex
     int _capacity; //antal element
@@ -17,9 +17,9 @@ typedef struct {
 
 Queue* newQueue(int capacity);
 void queueDestroy(Queue* q);
-void peek(Queue* q);
+Queue* peek(const Queue* q);
 bool queueIsEmpty(const Queue* q);
 bool queueIsFull(const Queue* q);
-bool queueEnqueue(Queue* q, Event e);
-bool queueDequeue(Queue* q, Event* out);
+bool queueEnqueue(Queue* q, eventPtr e);
+bool queueDequeue(Queue* q, Event** out);
 #endif //COURSE_ASSIGNTMENT_EVENTQUEUE_H

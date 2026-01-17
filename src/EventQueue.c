@@ -4,7 +4,7 @@
 
 static Queue* queueInit(int capacity) {
     Queue* ringBuffer = malloc(sizeof(Queue));
-    ringBuffer->_buffer = (Event*)malloc(sizeof(Event) * capacity);
+    ringBuffer->_buffer = (eventPtr*)malloc(sizeof(Event*) * capacity);
     ringBuffer->_capacity = capacity;
     ringBuffer->_count = 0;
     ringBuffer->_readIdx = 0;
@@ -23,11 +23,9 @@ void queueDestroy(Queue* q) {
     free(q);
 }
 
-void peek(Queue* const q) {
-    bool full = q->_full;
-    int spaceLeft = q->_capacity - q->_count;
-    Event data = q->_buffer[q->_readIdx];
-}
+/*Queue* peek(const Queue* q) {
+    return q;
+}*/
 
 bool queueIsEmpty(const Queue *q) {
     return q->_count == 0;
@@ -37,7 +35,7 @@ bool queueIsFull(const Queue *q) {
     return  q->_count == q->_capacity;
 }
 
-bool queueEnqueue( Queue *q, const Event e) {
+bool queueEnqueue( Queue *q, eventPtr e) {
     if (queueIsFull(q)) return false;
     q->_buffer[q->_writeIdx] = e;
     q->_writeIdx = (q->_writeIdx + 1) % q->_capacity;
@@ -46,9 +44,10 @@ bool queueEnqueue( Queue *q, const Event e) {
     return true;
 }
 
-bool queueDequeue(Queue *q, Event* out) {
+bool queueDequeue(Queue *q, Event **out) {
     if (queueIsEmpty(q)) return false;
     *out = q->_buffer[q->_readIdx];
+    q->_buffer[q->_readIdx] = NULL;
     q->_readIdx = (q->_readIdx + 1) % q->_capacity;
     q->_count--;
     if (q->_count < q->_capacity) { q->_full = false; }

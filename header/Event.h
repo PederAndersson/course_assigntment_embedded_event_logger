@@ -22,7 +22,6 @@ typedef enum Sensor{
 
 typedef int Data;
 
-
 typedef struct Event {
     sensorType _sensor;
     int _Id;
@@ -31,6 +30,8 @@ typedef struct Event {
     struct tm _timestamp;
 }Event;
 
+typedef Event* eventPtr;
+
 sensorType randomSensor();
 
 void initRand();
@@ -38,6 +39,7 @@ void initRand();
 Event* newEvent(sensorType s);
 
 
+void destroyEvent(eventPtr e);
 
 
 
