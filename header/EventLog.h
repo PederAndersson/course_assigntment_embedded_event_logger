@@ -8,20 +8,20 @@
 
 #include "Event.h"
 
-typedef struct EventLog logg;
+
 typedef struct EventLog* logPtr;
 
 typedef struct EventLog {
-    Event _node;
-    logg* _next;
+    Event* _node;
+    logPtr _next;
 }EventLog;
 
-logg* createEmptyList(void);
+logPtr createEmptyList(void);
 bool isEmpty(logPtr l);
 void logDestroyList(logPtr *l);
 void logDestroyElement(logPtr *l, Data d);
 void logDestroySensor(logPtr *l, sensorType s);
-void logAppend(logPtr *l, Event e);
+void logAppend(logPtr *l, Event *e);
 int logSize(logPtr l);
 
 
