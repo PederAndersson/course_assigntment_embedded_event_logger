@@ -14,6 +14,7 @@ sensorType randomSensor() {
     int sensor = rand() % 3;
     return sensor;
 }
+
 void initRand() {
     srand(time(NULL));
 }
@@ -59,4 +60,8 @@ static Event* createEvent(sensorType s) {
 Event* newEvent(sensorType s) {
     Event *newEvent = createEvent(s);
     return newEvent;
+}
+
+void destroyEvent(eventPtr e) {
+    free(e);
 }
