@@ -1,18 +1,20 @@
 #include "../header/ProgramManager.h"
 
+#include <ctype.h>
 #include <stdio.h>
+#include <string.h>
 
 void printMainMenu() {
     printf("1. Start program.\n"
     "2. Print log\n"
     "3. Sort log.\n"
-    "4. Find Sensor.\n"
-    "5. Find value.\n"
+    "4. Find Sensor and value.\n"
     "6. Help. \n"
-    "7. Exit.\n");
+    "7. Exit.\n\n\n"
+    "Input: ");
 }
 
-void printSubmenu(MenuFunctions m) {
+void run(MenuFunctions m, bool *isRunning) {
     switch (m) {
         case Run: {
             printf("run program for how many cycles? \n");
@@ -36,16 +38,17 @@ void printSubmenu(MenuFunctions m) {
         }
         case Exit: {
             printf("Have a nice day\n");
+            *isRunning = false;
             break;
         }
-            default: {printf("Unknown command."); break;}
+        case Unknown: {printf("Unknown command."); break;}
     }
 }
 
 void forEach(EventLog* log, void (*f)(EventLog* log)) {
     EventLog* current = log;
     if (current == NULL){return;}
-    while (current->_next != NULL) {
+    while (current != NULL) {
         (*f)(current);
         current = current->_next;
     }
@@ -67,7 +70,37 @@ const char* enumToString(sensorType s) {
     }
 }
 
-MenuFunctions stringToEnum(const char *string[20]) {
+MenuFunctions stringToEnum(char *string) {
+    trim(string);
+    normalizeString(string);
+    static const cmdEntry Table[] = {
+        {._cmd = "run",._m = Run},
+        {._cmd = "print",._m =  PrintLog},
+        {._cmd = "sort", ._m = SortLog},
+        {._cmd = "search",._m =  FindSensorValue},
+        {._cmd = "help",._m =  Help},
+        {._cmd = "exit",._m =  Exit}
+    };
+    for (int i = 0; i < (int)(sizeof(Table)/sizeof(Table[0])); i++) {
+        if (strcmp(string,Table[i]._cmd) == 0) {
+            return Table[i]._m;
+        }
+    }
+    return Unknown;
 }
 
-void run();
+void normalizeString(char *str) {
+    for (; *str != '\0'; ++str) {
+        *str = (char)tolower((unsigned char)*str);
+    }
+}
+
+void trim(char *str) {
+    size_t len = strlen(str);
+
+    while (len > 0 && isspace((unsigned char) str[len - 1])) {
+        str[len - 1] = '\0';
+        len--;
+    }
+}
+

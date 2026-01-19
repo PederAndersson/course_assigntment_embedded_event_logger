@@ -11,7 +11,7 @@
 
 
 int main(void) {
-    initRand();
+    /*initRand();
     int arrayCapacity = 100;
     Queue* queue = newQueue(arrayCapacity);
     EventLog* log = createEmptyList();
@@ -20,6 +20,16 @@ int main(void) {
     forEach(log, printEvents);
 
     logDestroyList(&log);
-    queueDestroy(queue);
+    queueDestroy(queue);*/
+
+    bool isRunning = true;
+    while (isRunning == true) {
+        char input[CMD_SIZE] = {};
+        printMainMenu();
+        fgets(input,sizeof(input),stdin);
+        run(stringToEnum(input), &isRunning);
+    }
+
+
     return 0;
 }
