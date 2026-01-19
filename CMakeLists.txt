@@ -11,4 +11,6 @@ add_executable(course_assigntment src/main.c
         header/EventLoop.h
         src/EventLoop.c
         src/Event.c
-        header/Event.h)
+        header/Event.h
+        header/ProgramManager.h
+        src/ProgramManager.c)
