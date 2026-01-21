@@ -17,11 +17,12 @@ typedef struct EventLog {
 }EventLog;
 
 logPtr createEmptyList(void);
+EventLog* newLog(Event *e);
 bool isEmpty(logPtr l);
 void logDestroyList(logPtr *l);
 void logDestroyElement(logPtr *l, Data d);
 void logDestroySensor(logPtr *l, sensorType s);
-void logAppend(logPtr *l, Event *e);
+bool logAppend(logPtr *l, Event *e);
 int logSize(logPtr l);
 
 

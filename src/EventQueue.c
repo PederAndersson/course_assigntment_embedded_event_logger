@@ -1,5 +1,6 @@
 #include "../header/EventQueue.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 static Queue* queueInit(int capacity) {
@@ -9,7 +10,6 @@ static Queue* queueInit(int capacity) {
     ringBuffer->_count = 0;
     ringBuffer->_readIdx = 0;
     ringBuffer->_writeIdx = 0;
-    ringBuffer->_full = false;
     return ringBuffer;
 }
 
@@ -23,9 +23,6 @@ void queueDestroy(Queue* q) {
     free(q);
 }
 
-/*Queue* peek(const Queue* q) {
-    return q;
-}*/
 
 bool queueIsEmpty(const Queue *q) {
     return q->_count == 0;
@@ -40,7 +37,6 @@ bool queueEnqueue( Queue *q, eventPtr e) {
     q->_buffer[q->_writeIdx] = e;
     q->_writeIdx = (q->_writeIdx + 1) % q->_capacity;
     q->_count++;
-    if (q->_count == q->_capacity){ q->_full = true;}
     return true;
 }
 
@@ -50,6 +46,5 @@ bool queueDequeue(Queue *q, Event **out) {
     q->_buffer[q->_readIdx] = NULL;
     q->_readIdx = (q->_readIdx + 1) % q->_capacity;
     q->_count--;
-    if (q->_count < q->_capacity) { q->_full = false; }
     return true;
 }
