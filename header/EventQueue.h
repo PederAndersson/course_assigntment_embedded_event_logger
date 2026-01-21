@@ -11,7 +11,6 @@ typedef struct {
     int _readIdx; // läsindex
     int _capacity; //antal element
     int _count; //antal element kvar att fylla
-    bool _full; // flaggar om full
 } Queue;
 
 

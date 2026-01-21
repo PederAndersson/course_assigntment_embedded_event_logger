@@ -7,11 +7,12 @@
 #include "../header/EventQueue.h"
 #include "../header/EventLoop.h"
 #include "../header/ProgramManager.h"
+#include "../header/sortAlgo.h"
 
 
 
 int main(void) {
-    /*initRand();
+    initRand();
     int arrayCapacity = 100;
     Queue* queue = newQueue(arrayCapacity);
     EventLog* log = createEmptyList();
@@ -19,16 +20,19 @@ int main(void) {
 
     forEach(log, printEvents);
 
-    logDestroyList(&log);
-    queueDestroy(queue);*/
+    printf("----------------------------");
 
-    bool isRunning = true;
-    while (isRunning == true) {
-        char input[CMD_SIZE] = {};
-        printMainMenu();
-        fgets(input,sizeof(input),stdin);
-        run(stringToEnum(input), &isRunning);
+    Event** sort = mergeSort(log);
+    int size = logSize(log);
+    for (int i = 0; i < size; i++) {
+        printf("sensor: %s Id: %d\n", enumToString(sort[i]->_sensor), sort[i]->_Id);
+        printf("Value : %d %s\n", sort[i]->_value, sort[i]->_unit);
+        printf("time: %d:%d:%d\n", sort[i]->_timestamp.tm_hour, sort[i]->_timestamp.tm_min, sort[i]->_timestamp.tm_sec);
     }
+    free(sort);
+    logDestroyList(&log);
+    queueDestroy(queue);
+
 
 
     return 0;

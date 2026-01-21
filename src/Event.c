@@ -22,7 +22,7 @@ void initRand() {
 
 static Event* createEvent(sensorType s) {
     Event* event = malloc(sizeof(Event));
-    if (!event) return 0;
+    if (!event) return NULL;
 
     switch (s) {
         case Temperature : {

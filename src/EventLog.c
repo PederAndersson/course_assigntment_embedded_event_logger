@@ -16,6 +16,11 @@ static EventLog* createLog(Event *e) {
     return event_log;
 }
 
+EventLog* newLog(Event * e) {
+    EventLog* logg = createLog(e);
+    return logg;
+}
+
 EventLog* createEmptyList(void) {
     return NULL;
 }
@@ -32,6 +37,7 @@ void logDestroyList(logPtr *l) {
     while (*l != NULL) {
         EventLog* listToRemove = *l;
         (*l) = (*l)->_next;
+        destroyEvent(listToRemove->_node);
         free(listToRemove);
     }
 }
@@ -41,6 +47,7 @@ void logDestroyElement(logPtr* l, const Data d ) {
     while (*l != NULL && (*l)->_node->_value == d) {
         EventLog* logToRemove = *l;
         (*l) = (*l)->_next;
+        destroyEvent(logToRemove->_node);
         free(logToRemove);
     }
     logPtr CurrentNode = *l;
@@ -49,6 +56,7 @@ void logDestroyElement(logPtr* l, const Data d ) {
         if (CurrentNode->_next->_node->_value == d) {
             EventLog* logToRemove = CurrentNode->_next;
             CurrentNode->_next = logToRemove->_next;
+            destroyEvent(logToRemove->_node);
             free(logToRemove);
         }else {
             CurrentNode = CurrentNode->_next;
@@ -62,6 +70,7 @@ void logDestroySensor(logPtr*l, sensorType s) {
     while (*l != NULL && (*l)->_node->_sensor == s) {
         EventLog* logToRemove = *l;
         (*l) = (*l)->_next;
+        destroyEvent(logToRemove->_node);
         free(logToRemove);
     }
 
@@ -71,6 +80,7 @@ void logDestroySensor(logPtr*l, sensorType s) {
         if (currentLog->_next->_node->_sensor == s) {
             EventLog* logToRemove = currentLog->_next;
             currentLog->_next = logToRemove->_next;
+            destroyEvent(logToRemove->_node);
             free(logToRemove);
         }else {
             currentLog = currentLog->_next;
@@ -78,21 +88,22 @@ void logDestroySensor(logPtr*l, sensorType s) {
     }
 }
 
-void logAppend(logPtr *l, Event *e) {
+bool logAppend(logPtr *l, Event *e) {
     EventLog* newLog = createLog(e);
-    if (!newLog) return;
+    if (!newLog) return false;
     if (*l == NULL) {
         newLog->_next = *l;
         (*l) = newLog;
-    }else {
-        EventLog* currentLog = *l;
-        while (currentLog->_next != NULL) {
-            currentLog = currentLog->_next;
-        }
-        if (currentLog->_next == NULL) {
-            currentLog->_next = newLog;
-        }
+        return true;
     }
+    EventLog* currentLog = *l;
+    while (currentLog->_next != NULL) {
+        currentLog = currentLog->_next;
+    }
+    if (currentLog->_next == NULL) {
+        currentLog->_next = newLog;
+    }
+    return true;
 }
 
 
