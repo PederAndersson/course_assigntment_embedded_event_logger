@@ -21,9 +21,9 @@ int main(void) {
     forEach(log, printEvents);
 
     printf("----------------------------");
+    int size ;
+    Event** sort = mergeSort(log,&size);
 
-    Event** sort = mergeSort(log);
-    int size = logSize(log);
     for (int i = 0; i < size; i++) {
         printf("sensor: %s Id: %d\n", enumToString(sort[i]->_sensor), sort[i]->_Id);
         printf("Value : %d %s\n", sort[i]->_value, sort[i]->_unit);

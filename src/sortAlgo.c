@@ -2,12 +2,13 @@
 
 #include <stdlib.h>
 
-Event** insertionSort(EventLog *log) {
+Event** insertionSort(EventLog *log, int* out) {
     if (isEmpty(log)){return NULL;}
 
     EventLog* current = log;
     int size = logSize(log);
     int n = 0;
+    *out = size;
 
     Event **tempArr = malloc(sizeof(*tempArr) * size);
     if (!tempArr){return NULL;}
@@ -88,12 +89,13 @@ static void mergeSortRec(Event **e, int startIndex, int lastIndex) {
 
 }
 
-Event** mergeSort(EventLog *log) {
+Event** mergeSort(EventLog *log, int* out) {
     if (isEmpty(log)){return NULL;}
 
     EventLog* current = log;
     int size = logSize(log);
     int n = 0;
+    *out = size;
 
     Event** tempArr = malloc(sizeof(*tempArr) * size);
     if (!tempArr){ return NULL;}
