@@ -16,7 +16,7 @@ typedef struct EventLog {
     logPtr _next;
 }EventLog;
 
-logPtr createEmptyList(void);
+EventLog* createEmptyList(void);
 EventLog* newLog(Event *e);
 bool isEmpty(logPtr l);
 void logDestroyList(logPtr *l);

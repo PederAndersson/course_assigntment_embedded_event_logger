@@ -7,5 +7,6 @@ Event** insertionSort(EventLog* log, int* out);
 
 Event** mergeSort(EventLog*log, int* out);
 
+typedef Event** (*sortFunc)(EventLog* log, int* out);
 
 #endif //COURSE_ASSIGNTMENT_SORTALGO_H

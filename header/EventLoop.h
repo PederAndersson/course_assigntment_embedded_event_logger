@@ -11,6 +11,5 @@
 #include "EventQueue.h"
 void eventProducer(Queue* q, int amount);
 void eventConsumer(Queue* q, logPtr* log, int amount);
-void tick(Queue* q, logPtr* log, int amount);
 
 #endif //COURSE_ASSIGNTMENT_EVENTLOOP_H

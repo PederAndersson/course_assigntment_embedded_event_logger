@@ -5,33 +5,21 @@
 #ifndef COURSE_ASSIGNTMENT_RUNMANAGER_H
 #define COURSE_ASSIGNTMENT_RUNMANAGER_H
 
-#define CMD_SIZE 20
-#include "EventLog.h"
+#include "Utils.h"
+#include "EventLoop.h"
 
-typedef enum  {
-    Run,
-    PrintLog,
-    SortLog,
-    FindSensorValue,
-    Help,
-    Exit,
-    Unknown
-}MenuFunctions;
 
-typedef struct {
-    const char* _cmd;
-    MenuFunctions _m;
-} cmdEntry;
 
 void printMainMenu();
-void run(MenuFunctions m, bool *isRunning);
+void run(Context* ctx);
+void parseString(char* string, Context* ctx);
+void help();
+void tick(Context* ctx);
+void print(Context* ctx);
+void sort(Context* ctx);
+void findId(Context* ctx);
+void quit(Context* ctx);
 
-void forEach(EventLog* log, void(*f)(EventLog* log));
-void printEvents(EventLog* log);
-const char* enumToString(sensorType s);
-MenuFunctions stringToEnum(char* string);
-void normalizeString(char* str);
-void trim(char* str);
 
 
 #endif //COURSE_ASSIGNTMENT_RUNMANAGER_H
