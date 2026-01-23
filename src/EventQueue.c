@@ -1,6 +1,5 @@
 #include "../header/EventQueue.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 
 static Queue* queueInit(int capacity) {

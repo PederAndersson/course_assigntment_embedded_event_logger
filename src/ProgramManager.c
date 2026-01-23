@@ -1,106 +1,136 @@
+#include <stdio.h>
 #include "../header/ProgramManager.h"
 
 #include <ctype.h>
-#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
+
+typedef struct {
+    char cmd[BUFFER_SIZE];
+    void (*function)(Context*);
+}command;
+
+command commandList[] = {
+    {.cmd = "help", .function = help},
+    {.cmd = "tick", .function = tick},
+    {.cmd = "print", .function = print},
+    {.cmd = "find", .function = findId},
+    {.cmd = "sort", .function = sort},
+    {.cmd = "quit", .function = quit}
+};
+
 void printMainMenu() {
-    printf("1. Start program.\n"
-    "2. Print log\n"
-    "3. Sort log.\n"
-    "4. Find Sensor and value.\n"
-    "6. Help. \n"
-    "7. Exit.\n\n\n"
+    printf("For help type help.\n"
     "Input: ");
 }
 
-void run(MenuFunctions m, bool *isRunning) {
-    switch (m) {
-        case Run: {
-            printf("run program for how many cycles? \n");
-            break;
+void help(Context* ctx, char* ch ) {
+    printf("AVAILABLE COMMANDS:\n");
+    printf("- Help lists all commands.\n"
+        "- tick amount ex. 'tick 25' creates 25 events\n"
+        "- print prints the eventlog\n"
+        "- sort sorting algorithm ex. 'sort merge' sorts and prints the log with mergesort\n"
+        " available algorithms merge and insertion\n"
+        "- find id ex 'find 1' prints all the sensors with id 1\n"
+        "- quit exits the program\n"
+        );
+
+}
+
+void run(Context* ctx) {
+    char string[BUFFER_SIZE];
+    fgets(string,BUFFER_SIZE,stdin);
+    parseString(string, ctx);
+    int size = sizeof(commandList)/sizeof(command);
+    for (int i = 0; i < size; i++) {
+        if (strcmp(commandList[i].cmd,ctx->cmdstring) == 0) {
+            return commandList[i].function(ctx);
         }
-        case PrintLog: {
-            printf("Print full log or specific sensor?\n");
-            break;
+    }
+
+    clearContext(ctx);
+}
+
+void parseString(char* string, Context* ctx) {
+    //sort str + str, find str + int, tick str + int
+    int strIdx = 0;
+    int cmdIdx = 0;
+    int argIdx = 0;
+
+    while (string[strIdx] == ' ' || string[strIdx] == '\t') {
+        strIdx++;
+    }
+
+    while (string[strIdx] != ' '  && string[strIdx] != '\t' && string[strIdx] != '\0' && string[strIdx] != '\n') {
+        if (cmdIdx >= BUFFER_SIZE-1){break;}
+        ctx->cmdstring[cmdIdx++] = (char)tolower((unsigned char)string[strIdx++]);
+    }
+    ctx->cmdstring[cmdIdx] = '\0';
+    while (string[strIdx] == ' ' || string[strIdx] == '\t') {
+        strIdx++;
+    }
+    if (strcmp(ctx->cmdstring,"sort") == 0) {
+        while (string[strIdx] != ' '  && string[strIdx] != '\t' && string[strIdx] != '\0' && string[strIdx] != '\n') {
+            if (argIdx >= BUFFER_SIZE-1){break;}
+            ctx->argString[argIdx++] = (char)tolower((unsigned char)string[strIdx++]);
         }
-        case SortLog: {
-            printf("Sort log by sensor and value using insertion or merge sort.\n");
-            break;
+        ctx->argString[argIdx] = '\0';
+    }
+
+    else if (strcmp(ctx->cmdstring,"find") == 0) {
+        char temp[BUFFER_SIZE];
+        int idx = 0;
+        while (string[strIdx] != ' '  && string[strIdx] != '\t' && string[strIdx] != '\0' && string[strIdx] != '\n' && idx < BUFFER_SIZE-1) {
+            temp[idx++] = string[strIdx++];
         }
-        case FindSensorValue: {
-            printf("Search for sensordata.\n");
-            break;
+        temp[idx] = '\0';
+        char* end = NULL;
+        int value = (int)strtol(temp, &end, 10);
+        if (end == temp) {
+            ctx->id = -1;
+        } else {
+            ctx->id = value;
         }
-        case Help: {
-            printf ("Help commands.\n");
-            break;
+    }else if (strcmp(ctx->cmdstring,"tick") == 0) {
+        char temp[BUFFER_SIZE];
+        int idx = 0;
+        while (string[strIdx] != ' '  && string[strIdx] != '\t' && string[strIdx] != '\0' && string[strIdx] != '\n' && idx < BUFFER_SIZE-1) {
+            temp[idx++] = string[strIdx++];
         }
-        case Exit: {
-            printf("Have a nice day\n");
-            *isRunning = false;
-            break;
+        temp[idx] = '\0';
+        char* end = NULL;
+        int value = (int)strtol(temp, &end, 10);
+        if (end == temp) {
+            ctx->ammount = -1;
+        } else {
+            ctx->ammount = value;
         }
-        case Unknown: {printf("Unknown command."); break;}
     }
 }
 
-void forEach(EventLog* log, void (*f)(EventLog* log)) {
-    EventLog* current = log;
-    if (current == NULL){return;}
-    while (current != NULL) {
-        (*f)(current);
-        current = current->_next;
-    }
+void tick(Context* ctx) {
+    eventProducer(ctx->queue, ctx->ammount);
+    eventConsumer(ctx->queue, &ctx->log, ctx->ammount);
 }
 
-void printEvents(EventLog* log) {
-
-    printf("SensorType: %s Id: %d\n", enumToString(log->_node->_sensor), log->_node->_Id);
-    printf("Value: %d %s\n", log->_node->_value, log->_node->_unit);
-    printf ("Timestamp: %d:%2d:%d\n", log->_node->_timestamp.tm_hour, log->_node->_timestamp.tm_min,log->_node->_timestamp.tm_sec);
+void print(Context* ctx) {
+    forEach(ctx,printEvents);
 }
 
-const char* enumToString(sensorType s) {
-    switch (s) {
-        case Temperature: { return "Temperature Sensor";}
-        case Humidity: {return "Humidity Sensor";}
-        case Light: {return "Light Sensor";}
-        default: return "Unknown Sensor";
-    }
+void sort(Context* ctx) {
+
+    sortFunc chosen = chosenSort(ctx);
+
+    printSortedLog(chosen,ctx->log);
 }
 
-MenuFunctions stringToEnum(char *string) {
-    trim(string);
-    normalizeString(string);
-    static const cmdEntry Table[] = {
-        {._cmd = "run",._m = Run},
-        {._cmd = "print",._m =  PrintLog},
-        {._cmd = "sort", ._m = SortLog},
-        {._cmd = "search",._m =  FindSensorValue},
-        {._cmd = "help",._m =  Help},
-        {._cmd = "exit",._m =  Exit}
-    };
-    for (int i = 0; i < (int)(sizeof(Table)/sizeof(Table[0])); i++) {
-        if (strcmp(string,Table[i]._cmd) == 0) {
-            return Table[i]._m;
-        }
-    }
-    return Unknown;
+void findId(Context* ctx) {
+    findSensorId(ctx);
 }
 
-void normalizeString(char *str) {
-    for (; *str != '\0'; ++str) {
-        *str = (char)tolower((unsigned char)*str);
-    }
+void quit(Context* ctx) {
+    logDestroyList(&ctx->log);
+    queueDestroy(ctx->queue);
+    *ctx->Running = false;
 }
-
-void trim(char *str) {
-    size_t len = strlen(str);
-
-    while (len > 0 && isspace((unsigned char) str[len - 1])) {
-        str[len - 1] = '\0';
-        len--;
-    }
-}
-

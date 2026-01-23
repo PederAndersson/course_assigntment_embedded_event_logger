@@ -16,4 +16,6 @@ add_executable(course_assigntment src/main.c
         src/ProgramManager.c
         header/sortAlgo.h
         src/sortAlgo.c
-        header/context.h)
+        header/context.h
+        header/Utils.h
+        src/Utils.c)

@@ -1,6 +1,5 @@
 #include "../header/EventLoop.h"
 
-#include <stdlib.h>
 
 
 void eventProducer(Queue* q, int amount) {
@@ -22,7 +21,3 @@ void eventConsumer(Queue* q, logPtr* log, int amount) {
     }
 }
 
-void tick(Queue *q, logPtr* log, int amount) {
-    eventProducer(q, amount);
-    eventConsumer(q, log, amount);
-}
