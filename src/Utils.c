@@ -73,11 +73,11 @@ const char* enumToString(sensorType s) {
 }
 
 sortFunc chosenSort(Context *ctx) {
-    sortFunc chosen;
+    sortFunc chosen = {};
     if (strcmp(ctx->argString, "merge") == 0) {
         chosen = mergeSort;
     }
-    if (strcmp(ctx->argString, "insertion") == 0) {
+    else if (strcmp(ctx->argString, "insertion") == 0) {
         chosen = insertionSort;
     }else {
         printf("Algorithms available: merge or insertion.");

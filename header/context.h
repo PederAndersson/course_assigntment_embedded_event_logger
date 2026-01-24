@@ -3,12 +3,14 @@
 
 #include "EventLog.h"
 #include "EventQueue.h"
+#include "alarmSet.h"
 
 #define BUFFER_SIZE 50
 typedef struct {
     EventLog* log;
     Queue* queue;
     bool* Running;
+    Alarm* alarm;
     long id;
     long ammount;
     char cmdstring[BUFFER_SIZE];

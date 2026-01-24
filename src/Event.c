@@ -29,8 +29,8 @@ static Event* createEvent(sensorType s) {
             event->_sensor = Temperature;
             strncpy(event->_unit, "C", UNIT_SIZE);
             event->_unit[UNIT_SIZE-1] = '\0';
-            event->_value = rand() % 35 + 18;
-            event->_Id = TEMP_ID;
+            event->_value = rand() % 42 + 18;
+            event->_Id = rand() % 5 + 1;
             break;
 
         }
@@ -38,8 +38,8 @@ static Event* createEvent(sensorType s) {
             event->_sensor = Humidity;
             strncpy(event->_unit, "%", UNIT_SIZE);
             event->_unit[UNIT_SIZE-1] = '\0';
-            event->_value = rand() % 85 + 40;
-            event->_Id = HUM_ID;
+            event->_value = rand() % 44 + 40;
+            event->_Id = rand()% 5 + 6;
             break;
 
         }
@@ -47,8 +47,8 @@ static Event* createEvent(sensorType s) {
             event->_sensor = Light;
             strncpy(event->_unit, "lx", UNIT_SIZE);
             event->_unit[UNIT_SIZE-1] = '\0';
-            event->_value = rand() % 450 + 250 ;
-            event->_Id = LIGHT_ID;
+            event->_value = rand() % 201 + 250 ;
+            event->_Id = rand() % 5 + 11;
             break;
         }
             default: {free(event); return NULL;}

@@ -17,12 +17,12 @@ command commandList[] = {
     {.cmd = "print", .function = print},
     {.cmd = "find", .function = findId},
     {.cmd = "sort", .function = sort},
-    {.cmd = "quit", .function = quit}
+    {.cmd = "quit", .function = quit},
+    {.cmd = "alarm", .function = printActivAlarm}
 };
 
 void printMainMenu() {
-    printf("For help type help.\n"
-    "Input: ");
+    printf("Input: ");
 }
 
 void help(Context* ctx, char* ch ) {
@@ -31,14 +31,16 @@ void help(Context* ctx, char* ch ) {
         "- tick amount ex. 'tick 25' creates 25 events\n"
         "- print prints the eventlog\n"
         "- sort sorting algorithm ex. 'sort merge' sorts and prints the log with mergesort\n"
-        " available algorithms merge and insertion\n"
+        "  available algorithms merge and insertion\n"
         "- find id ex 'find 1' prints all the sensors with id 1\n"
+        "- alarm to see if any alarms are active."
         "- quit exits the program\n"
         );
 
 }
 
 void run(Context* ctx) {
+    printMainMenu();
     char string[BUFFER_SIZE];
     fgets(string,BUFFER_SIZE,stdin);
     parseString(string, ctx);
@@ -111,7 +113,7 @@ void parseString(char* string, Context* ctx) {
 
 void tick(Context* ctx) {
     eventProducer(ctx->queue, ctx->ammount);
-    eventConsumer(ctx->queue, &ctx->log, ctx->ammount);
+    eventConsumer(ctx->queue, (Context*)&ctx->log, ctx->ammount);
 }
 
 void print(Context* ctx) {
@@ -127,6 +129,12 @@ void sort(Context* ctx) {
 
 void findId(Context* ctx) {
     findSensorId(ctx);
+}
+
+void printActivAlarm(Context* ctx) {
+    for (int i = 0; i < ctx->alarm->size; i++) {
+        printf("Alarm active on Sensor ID: %d\n", ctx->alarm->sensorId[i]);
+    }
 }
 
 void quit(Context* ctx) {

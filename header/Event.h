@@ -9,9 +9,7 @@
 
 #define SENSOR_NAME_SIZE 20
 #define UNIT_SIZE 5
-#define TEMP_ID 1
-#define HUM_ID 2
-#define LIGHT_ID 3
+
 
 typedef enum Sensor{
     Temperature,

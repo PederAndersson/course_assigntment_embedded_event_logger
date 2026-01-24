@@ -18,4 +18,8 @@ add_executable(course_assigntment src/main.c
         src/sortAlgo.c
         header/context.h
         header/Utils.h
-        src/Utils.c)
+        src/Utils.c
+        header/alarmSet.h
+        src/alarmSet.c
+        header/Observer.h
+        src/Observer.c)

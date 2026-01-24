@@ -2,6 +2,7 @@
 
 
 
+
 void eventProducer(Queue* q, int amount) {
 
     for ( int i = 0; i < amount; i++) {
@@ -12,12 +13,12 @@ void eventProducer(Queue* q, int amount) {
 
 }
 
-void eventConsumer(Queue* q, logPtr* log, int amount) {
+void eventConsumer(Queue* q, Context* ctx, int amount) {
+    if (!q || !ctx || amount <= 0){return;}
     for (int i = 0; i < amount; i++) {
         Event* e = NULL;
-        if (!queueDequeue(q,&e)){return;}
-        if (e == NULL){return;}
-        if (!logAppend(log,e)){destroyEvent(e);}
+        if (!queueDequeue(q,&e) || e == NULL ){break;}
+        notifyAll(e,ctx);
     }
 }
 

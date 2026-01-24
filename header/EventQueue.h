@@ -4,6 +4,7 @@
 
 #include <stdbool.h>
 #include "Event.h"
+#include "alarmSet.h"
 
 typedef struct {
     eventPtr* _buffer; //array

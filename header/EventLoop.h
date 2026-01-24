@@ -7,9 +7,11 @@
 
 
 #include "EventLog.h"
-
 #include "EventQueue.h"
+#include "../header/Observer.h"
+
+
 void eventProducer(Queue* q, int amount);
-void eventConsumer(Queue* q, logPtr* log, int amount);
+void eventConsumer(Queue* q, Context* ctx, int amount);
 
 #endif //COURSE_ASSIGNTMENT_EVENTLOOP_H
