@@ -15,7 +15,6 @@ typedef enum Sensor{
     Temperature,
     Humidity,
     Light,
-    TYPE_COUNT
 } sensorType;
 
 typedef int Data;

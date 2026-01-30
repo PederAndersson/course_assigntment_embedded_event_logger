@@ -1,5 +1,6 @@
 #include "../header/Utils.h"
 
+#include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,6 +9,7 @@
 
 
 void findSensorId(Context* ctx) {
+    assert(ctx != NULL);
     int id = ctx->id;
     int prints = 0;
 
@@ -21,6 +23,8 @@ void findSensorId(Context* ctx) {
 }
 
 void printSortedLog(sortFunc func, EventLog *log) {
+    assert(func != NULL);
+    assert(log != NULL);
     int size = 0;
     Event** tempArr = func(log, &size);
     for (int i = 0; i < size; i++) {
@@ -33,13 +37,15 @@ void printSortedLog(sortFunc func, EventLog *log) {
 
 
 void printEvents(EventLog* log) {
-
+    assert(log != NULL);
+    assert(log->_node != NULL);
     printf("SensorType: %s Id: %d\n", enumToString(log->_node->_sensor), log->_node->_Id);
     printf("Value: %d %s\n", log->_node->_value, log->_node->_unit);
     convertTime(&log->_node->_timestamp);
 }
 
 void normalizeString(char *str) {
+    assert(str != NULL);
     for (; *str != '\0'; ++str) {
         *str = (char)tolower((unsigned char)*str);
     }
@@ -47,6 +53,7 @@ void normalizeString(char *str) {
 
 
 void trim(char *str) {
+    assert(str != NULL);
     size_t len = strlen(str);
 
     while (len > 0 && isspace((unsigned char) str[len - 1])) {
@@ -56,6 +63,8 @@ void trim(char *str) {
 }
 
 void forEach(Context* ctx, void (*f)(EventLog* log)) {
+    assert(ctx != NULL);
+    assert(f != NULL);
     EventLog* current = ctx->log;
     if (current == NULL){return;}
     while (current != NULL) {
@@ -108,12 +117,14 @@ void clearString(char *string) {
 }
 
 void convertTime(time_t* t) {
+    assert(t != NULL);
     struct tm *currentTime = localtime(t);
     printf("%d:%d:%d\n",currentTime->tm_hour,currentTime->tm_min,currentTime->tm_sec);
 }
 
 void parseString(char* string, Context* ctx) {
-    //sort str + str, find str + int, tick str + int
+    assert(string != NULL);
+    assert(ctx != NULL);
     int strIdx = 0;
     int cmdIdx = 0;
     int argIdx = 0;

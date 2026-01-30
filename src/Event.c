@@ -1,5 +1,6 @@
 #include "../header/Event.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -21,6 +22,7 @@ void initRand() {
 
 
 static Event* createEvent(sensorType s) {
+    assert(s >= Temperature && s <= Light);
     Event* event = malloc(sizeof(Event));
     if (!event) return NULL;
 
@@ -63,5 +65,6 @@ Event* newEvent(sensorType s) {
 }
 
 void destroyEvent(eventPtr e) {
+    assert(e != NULL);
     free(e);
 }
