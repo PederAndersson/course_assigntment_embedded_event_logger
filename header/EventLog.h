@@ -23,6 +23,8 @@ void logDestroyList(logPtr *l);
 void logDestroyElement(logPtr *l, Data d);
 void logDestroySensor(logPtr *l, sensorType s);
 bool logAppend(logPtr *l, Event *e);
+void logInsert(logPtr *l, int place, Event *e);
+Event* logGet(logPtr *l, int place);
 int logSize(logPtr l);
 
 

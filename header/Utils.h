@@ -15,6 +15,8 @@ const char* enumToString(sensorType s);
 sortFunc chosenSort(Context* ctx);
 void clearContext(Context* ctx);
 void clearString(char* string);
+void convertTime(time_t* t);
+void parseString(char* string, Context* ctx);
 
 
 

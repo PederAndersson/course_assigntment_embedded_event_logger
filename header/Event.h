@@ -15,7 +15,6 @@ typedef enum Sensor{
     Temperature,
     Humidity,
     Light,
-    TYPE_COUNT
 } sensorType;
 
 typedef int Data;
@@ -25,7 +24,7 @@ typedef struct Event {
     int _Id;
     Data _value;
     char _unit[UNIT_SIZE];
-    struct tm _timestamp;
+    time_t _timestamp;
 }Event;
 
 typedef Event* eventPtr;

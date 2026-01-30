@@ -7,7 +7,7 @@ void eventProducer(Queue* q, int amount) {
 
     for ( int i = 0; i < amount; i++) {
         Event *e = newEvent(randomSensor());
-
+        e->_timestamp += i;
         if (!queueEnqueue(q,e)){ destroyEvent(e);}
     }
 

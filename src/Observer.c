@@ -1,7 +1,10 @@
 #include "../header/Observer.h"
 
-void notifyAll(Event *e, Context* ctx ) {
+#include <assert.h>
 
+void notifyAll(Event *e, Context* ctx ) {
+    assert(e != NULL);
+    assert(ctx != NULL);
     notifyAlarm(ctx,e);
     notifyLogger(ctx,e);
 }
@@ -25,6 +28,8 @@ void notifyAlarm(Context* ctx, Event *e) {
 
 
 void notifyLogger(Context* ctx, Event *e) {
+    assert(ctx != NULL);
+    assert(e != NULL);
     if (!logAppend(&ctx->log,e)){destroyEvent(e);}
 }
 
