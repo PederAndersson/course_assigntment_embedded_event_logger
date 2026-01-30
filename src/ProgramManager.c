@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 
 typedef struct {
@@ -54,62 +55,7 @@ void run(Context* ctx) {
     clearContext(ctx);
 }
 
-void parseString(char* string, Context* ctx) {
-    //sort str + str, find str + int, tick str + int
-    int strIdx = 0;
-    int cmdIdx = 0;
-    int argIdx = 0;
 
-    while (string[strIdx] == ' ' || string[strIdx] == '\t') {
-        strIdx++;
-    }
-
-    while (string[strIdx] != ' '  && string[strIdx] != '\t' && string[strIdx] != '\0' && string[strIdx] != '\n') {
-        if (cmdIdx >= BUFFER_SIZE-1){break;}
-        ctx->cmdstring[cmdIdx++] = (char)tolower((unsigned char)string[strIdx++]);
-    }
-    ctx->cmdstring[cmdIdx] = '\0';
-    while (string[strIdx] == ' ' || string[strIdx] == '\t') {
-        strIdx++;
-    }
-    if (strcmp(ctx->cmdstring,"sort") == 0) {
-        while (string[strIdx] != ' '  && string[strIdx] != '\t' && string[strIdx] != '\0' && string[strIdx] != '\n') {
-            if (argIdx >= BUFFER_SIZE-1){break;}
-            ctx->argString[argIdx++] = (char)tolower((unsigned char)string[strIdx++]);
-        }
-        ctx->argString[argIdx] = '\0';
-    }
-
-    else if (strcmp(ctx->cmdstring,"find") == 0) {
-        char temp[BUFFER_SIZE];
-        int idx = 0;
-        while (string[strIdx] != ' '  && string[strIdx] != '\t' && string[strIdx] != '\0' && string[strIdx] != '\n' && idx < BUFFER_SIZE-1) {
-            temp[idx++] = string[strIdx++];
-        }
-        temp[idx] = '\0';
-        char* end = NULL;
-        int value = (int)strtol(temp, &end, 10);
-        if (end == temp) {
-            ctx->id = -1;
-        } else {
-            ctx->id = value;
-        }
-    }else if (strcmp(ctx->cmdstring,"tick") == 0) {
-        char temp[BUFFER_SIZE];
-        int idx = 0;
-        while (string[strIdx] != ' '  && string[strIdx] != '\t' && string[strIdx] != '\0' && string[strIdx] != '\n' && idx < BUFFER_SIZE-1) {
-            temp[idx++] = string[strIdx++];
-        }
-        temp[idx] = '\0';
-        char* end = NULL;
-        int value = (int)strtol(temp, &end, 10);
-        if (end == temp) {
-            ctx->ammount = -1;
-        } else {
-            ctx->ammount = value;
-        }
-    }
-}
 
 void tick(Context* ctx) {
     eventProducer(ctx->queue, ctx->ammount);

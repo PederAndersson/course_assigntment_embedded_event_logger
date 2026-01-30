@@ -4,10 +4,10 @@
 #include <string.h>
 
 
-static struct tm currentTime() {
+time_t currentTime() {
     time_t now = time(NULL);
-    struct tm t = *localtime(&now);
-    return t;
+
+    return now;
 }
 
 sensorType randomSensor() {
