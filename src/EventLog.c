@@ -6,10 +6,12 @@
 
 #include "../header/EventLog.h"
 
+#include <assert.h>
+
 
 static EventLog* createLog(Event *e) {
     EventLog* event_log = malloc(sizeof(EventLog));
-    if (!event_log) return NULL;
+    if (!event_log){ return NULL;}
     event_log->_node = e;
     event_log->_next = NULL;
 
@@ -32,7 +34,7 @@ bool isEmpty(logPtr l) {
 
 
 void logDestroyList(logPtr *l) {
-    if (isEmpty(*l)) return;
+    assert(l != NULL);
 
     while (*l != NULL) {
         EventLog* listToRemove = *l;
@@ -40,9 +42,11 @@ void logDestroyList(logPtr *l) {
         destroyEvent(listToRemove->_node);
         free(listToRemove);
     }
+    assert(isEmpty(*l));
 }
 
 void logDestroyElement(logPtr* l, const Data d ) {
+    assert(l != NULL);
     if (isEmpty(*l)) return;
     while (*l != NULL && (*l)->_node->_value == d) {
         EventLog* logToRemove = *l;
@@ -65,6 +69,7 @@ void logDestroyElement(logPtr* l, const Data d ) {
 }
 
 void logDestroySensor(logPtr*l, sensorType s) {
+    assert(l != NULL);
     if (isEmpty(*l)) return;
 
     while (*l != NULL && (*l)->_node->_sensor == s) {
@@ -89,6 +94,8 @@ void logDestroySensor(logPtr*l, sensorType s) {
 }
 
 bool logAppend(logPtr *l, Event *e) {
+    assert(l != NULL);
+    assert(e != NULL);
     EventLog* newLog = createLog(e);
     if (!newLog) return false;
     if (*l == NULL) {
@@ -104,6 +111,35 @@ bool logAppend(logPtr *l, Event *e) {
         currentLog->_next = newLog;
     }
     return true;
+}
+
+void logInsert(logPtr*l, int place, Event *e) {
+    assert(l != NULL);
+    assert(e != NULL);
+    assert(place >= 0 && place <= logSize(*l));
+    EventLog* newLog = createLog(e);
+    if (!newLog){return;}
+    if (place == 0) {
+        newLog->_next = *l;
+        *l = newLog;
+        return;
+    }
+    EventLog *current = *l;
+    for (int i = 0; i < place - 1; i++) {
+        current = current->_next;
+    }
+    newLog->_next = current->_next;
+    current->_next = newLog;
+}
+
+Event* logGet(logPtr*l, int place) {
+    assert(l != NULL);
+    assert(place >= 0 && place < logSize(*l));
+    EventLog* current = *l;
+    for (int i = 0; i < place; i++) {
+        current = current->_next;
+    }
+    return current->_node;
 }
 
 
