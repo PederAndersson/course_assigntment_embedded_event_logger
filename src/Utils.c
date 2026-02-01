@@ -8,17 +8,21 @@
 
 
 
-void findSensorId(Context* ctx) {
+void findSensorId(const Context* ctx) {
+    //for (EventLog* cur = (ctx->log); cur != NULL; cur = cur->_next) a bit too much AI for me.
     assert(ctx != NULL);
     int id = ctx->id;
     int prints = 0;
 
-    for (EventLog* cur = (ctx->log); cur != NULL; cur = cur->_next) {
+    EventLog* cur = (ctx->log);
+    while (cur != NULL) {
         if (cur->_node->_Id == id) {
             printEvents(cur);
             prints++;
         }
+        cur = cur->_next;
     }
+
     if (prints == 0) puts("No sensors found.");
 }
 
@@ -26,22 +30,22 @@ void printSortedLog(sortFunc func, EventLog *log) {
     assert(func != NULL);
     assert(log != NULL);
     int size = 0;
-    Event** tempArr = func(log, &size);
+    Event** tempArr = func(log, &size); // copy the list and create a sorted array.
     for (int i = 0; i < size; i++) {
         printf("sensor: %s Id: %d\n", enumToString(tempArr[i]->_sensor), tempArr[i]->_Id);
         printf("Value : %d %s\n", tempArr[i]->_value, tempArr[i]->_unit);
-        convertTime(&log->_node->_timestamp);
+        convertTime(tempArr[i]->_timestamp);
     }
-    free(tempArr);
+    free(tempArr); // destroy the array when done.
 }
 
 
-void printEvents(EventLog* log) {
+void printEvents(const EventLog* log) {
     assert(log != NULL);
     assert(log->_node != NULL);
     printf("SensorType: %s Id: %d\n", enumToString(log->_node->_sensor), log->_node->_Id);
     printf("Value: %d %s\n", log->_node->_value, log->_node->_unit);
-    convertTime(&log->_node->_timestamp);
+    convertTime(log->_node->_timestamp);
 }
 
 void normalizeString(char *str) {
@@ -62,7 +66,7 @@ void trim(char *str) {
     }
 }
 
-void forEach(Context* ctx, void (*f)(EventLog* log)) {
+void forEach(const Context* ctx, void (*f)(const EventLog* log)) {
     assert(ctx != NULL);
     assert(f != NULL);
     EventLog* current = ctx->log;
@@ -84,7 +88,7 @@ const char* enumToString(sensorType s) {
 
 sortFunc chosenSort(Context *ctx) {
     sortFunc chosen = {};
-
+    //failsafe incase you misspell
     while (strcmp(ctx->argString, "merge") != 0 && strcmp(ctx->argString, "insertion")!= 0) {
         printf("Algorithms available: merge or insertion.\n"
         "Input: ");
@@ -103,7 +107,7 @@ sortFunc chosenSort(Context *ctx) {
     return chosen;
 }
 
-void clearContext(Context *ctx) {
+void clearContext(Context *ctx) { // clears the context struct so old commands do not linger
     ctx->ammount = 0;
     ctx->id = 0;
     clearString(ctx->argString);
@@ -116,31 +120,33 @@ void clearString(char *string) {
     }
 }
 
-void convertTime(time_t* t) {
-    assert(t != NULL);
-    struct tm *currentTime = localtime(t);
-    printf("%d:%d:%d\n",currentTime->tm_hour,currentTime->tm_min,currentTime->tm_sec);
+void convertTime(time_t t) {
+    assert(&t != NULL);
+    struct tm *currentTime = localtime(&t);
+    printf("%.2d:%.2d:%.2d\n",currentTime->tm_hour,currentTime->tm_min,currentTime->tm_sec);
 }
 
-void parseString(char* string, Context* ctx) {
+void parseString(const char* string, Context* ctx) {
     assert(string != NULL);
     assert(ctx != NULL);
     int strIdx = 0;
     int cmdIdx = 0;
     int argIdx = 0;
-
+    // if whitespace first
     while (string[strIdx] == ' ' || string[strIdx] == '\t') {
         strIdx++;
     }
-
+    //copies the first word to cmdString and adds '\0' and the end.
     while (string[strIdx] != ' '  && string[strIdx] != '\t' && string[strIdx] != '\0' && string[strIdx] != '\n') {
         if (cmdIdx >= BUFFER_SIZE-1){break;}
         ctx->cmdstring[cmdIdx++] = (char)tolower((unsigned char)string[strIdx++]);
     }
     ctx->cmdstring[cmdIdx] = '\0';
+    //if more than 1 whitespace.
     while (string[strIdx] == ' ' || string[strIdx] == '\t') {
         strIdx++;
     }
+    //checks cmdstring for next step, to either copy to argstring, value or id
     if (strcmp(ctx->cmdstring,"sort") == 0) {
         while (string[strIdx] != ' '  && string[strIdx] != '\t' && string[strIdx] != '\0' && string[strIdx] != '\n') {
             if (argIdx >= BUFFER_SIZE-1){break;}

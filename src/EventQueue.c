@@ -55,7 +55,7 @@ bool queueDequeue(Queue *q, Event **out) {
     assert(q->_count >= 0 && q->_count <= q->_capacity);
     if (queueIsEmpty(q)) return false;
     *out = q->_buffer[q->_readIdx];
-    q->_buffer[q->_readIdx] = NULL;
+    q->_buffer[q->_readIdx] = NULL; // empties the queue so only the log has final ownership of the event pointers
     q->_readIdx = (q->_readIdx + 1) % q->_capacity;
     q->_count--;
     return true;

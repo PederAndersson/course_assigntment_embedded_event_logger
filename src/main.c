@@ -14,7 +14,7 @@ int main(void) {
     Alarm alarmSet;
     alarmInit(&alarmSet);
     bool isRunning = true;
-
+    // struct containing all relevant variables
     Context ctx = {
         .log = log,
         .queue = queue,

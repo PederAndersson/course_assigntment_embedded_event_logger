@@ -1,17 +1,17 @@
 #include <stdio.h>
 #include "../header/ProgramManager.h"
 
-#include <ctype.h>
+
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
+
 
 
 typedef struct {
     char cmd[BUFFER_SIZE];
     void (*function)(Context*);
 }command;
-
+// command pattern for the runtime commands
 command commandList[] = {
     {.cmd = "help", .function = help},
     {.cmd = "tick", .function = tick},
@@ -63,11 +63,12 @@ void tick(Context* ctx) {
 }
 
 void print(Context* ctx) {
+    //HoF to print the entire log
     forEach(ctx,printEvents);
 }
 
 void sort(Context* ctx) {
-
+    //strategy light for choosing what sorting algorithm
     sortFunc chosen = chosenSort(ctx);
 
     printSortedLog(chosen,ctx->log);
@@ -84,6 +85,7 @@ void printActivAlarm(Context* ctx) {
 }
 
 void quit(Context* ctx) {
+    //frees all allocated memory
     logDestroyList(&ctx->log);
     queueDestroy(ctx->queue);
     *ctx->Running = false;

@@ -10,6 +10,7 @@ void notifyAll(Event *e, Context* ctx ) {
 }
 
 void notifyAlarm(Context* ctx, Event *e) {
+    //alarm thresholds
     if (!ctx || !ctx->alarm || !e) return;
     if (e->_Id > 0 && e->_Id <= 5) {
         if (e->_value > 30) addAlarm(ctx->alarm, e);
@@ -27,7 +28,7 @@ void notifyAlarm(Context* ctx, Event *e) {
 }
 
 
-void notifyLogger(Context* ctx, Event *e) {
+void notifyLogger(Context* ctx, Event *e) { // sends event to Log if append fails destroy the event.
     assert(ctx != NULL);
     assert(e != NULL);
     if (!logAppend(&ctx->log,e)){destroyEvent(e);}

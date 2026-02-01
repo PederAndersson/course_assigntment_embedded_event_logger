@@ -5,18 +5,18 @@
 #include "Event.h"
 #include "context.h"
 
-void findSensorId(Context* ctx);
+void findSensorId(const Context* ctx);
 void printSortedLog(sortFunc func, EventLog* log);
-void printEvents(EventLog* log);
+void printEvents(const EventLog* log);
 void normalizeString(char* str);
 void trim(char* str);
-void forEach(Context* ctx, void(*f)(EventLog* log));
+void forEach(const Context* ctx, void(*f)(const EventLog* log));
 const char* enumToString(sensorType s);
 sortFunc chosenSort(Context* ctx);
 void clearContext(Context* ctx);
 void clearString(char* string);
-void convertTime(time_t* t);
-void parseString(char* string, Context* ctx);
+void convertTime(time_t t);
+void parseString(const char* string, Context* ctx);
 
 
 
