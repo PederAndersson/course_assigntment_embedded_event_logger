@@ -71,3 +71,8 @@ Detta skriver ut alla loggade händelser som har Sensor ID: 3.
 Input: alarm
 ```
 Om en temperatursensor (ID 1-5) har ett värde över 30, eller en fuktsensor (ID 6-10) över 60, kommer de att synas här.
+
+### gitHub
+```text
+https://github.com/PederAndersson/course_assigntment_embedded_event_logger/tree/main
+```
